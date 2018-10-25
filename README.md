@@ -1,4 +1,4 @@
-# Probe Screen for Mach3
+# Probe Wizard for Mach3
 
  Install.
 -----------------------------------------------------------------------------
