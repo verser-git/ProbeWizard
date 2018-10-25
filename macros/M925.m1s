@@ -1,0 +1,26 @@
+Sub Main()
+
+' Center of rotation G68
+' Author verser
+' vers.by - touch probes, tool setters and precision home switches
+
+
+Dim Angle,pi
+Dim X,Y,Xabs,Yabs,Xc,Yc
+
+pi = 4 * Atn(1)
+Angle= GetOEMDRO(118) * pi/180  
+Xabs=GetOEMDRO(83)
+Yabs=GetOEMDRO(84)
+X=GetDRO(0)
+Y=GetDRO(1)
+Xc=-(Xabs+X*Cos(Angle)-Y*Sin(Angle))
+Yc=-(Yabs+X*Sin(Angle)+Y*Cos(Angle))
+If Angle=0 Then
+	Xc=0
+	Yc=0
+End If
+SetUserLabel (22,"A=" & Format(Xc, "###0.###"))
+SetUserLabel (23,"B=" & Format(Yc, "###0.###"))
+
+End Sub
