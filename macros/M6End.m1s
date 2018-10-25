@@ -105,15 +105,15 @@ CurrentSpindle = GetOEMDRO(39)
 
 	'Safe Go to start position under toolsetter
 	If Not SafeMoveZ(ZAbsSafePlane-GetOEMDRO(85),CurrentFeed) Then 
-		PushMSG("TS Height Probing is interrupted")
+		PushMSG("M6End Script is interrupted")
 		Exit Sub 
 	End If
 	If Not SafeMoveXY(ToolSetterAbsXPos-GetOEMDRO(83),ToolSetterAbsYPos-GetOEMDRO(84),CurrentFeed) Then 
-		PushMSG("TS Height Probing is interrupted")
+		PushMSG("M6End Script is interrupted")
 		Exit Sub 
 	End If
 	If Not SafeMoveZ(ZAbsStartPos-GetOEMDRO(85),CurrentFeed) Then 
-		PushMSG("TS Height Probing is interrupted")
+		PushMSG("M6End Script is interrupted")
 		Exit Sub 
 	End If
 	'Probe Z-
@@ -132,11 +132,11 @@ CurrentSpindle = GetOEMDRO(39)
     Code "g43 H" & CurrToolNumber 'Set the height	
 	
  	If Not SafeMoveZ(ZAbsSafePlane-GetOEMDRO(85),CurrentFeed) Then 
-		PushMSG("TS Height Probing is interrupted")
+		PushMSG("M6End Script is interrupted")
 		Exit Sub 
 	End If
 	If Not SafeMoveXY(ToolChangeAbsXPos-GetOEMDRO(83),ToolChangeAbsYPos-GetOEMDRO(84),CurrentFeed) Then 
-		PushMSG("TS Height Probing is interrupted")
+		PushMSG("M6End Script is interrupted")
 		Exit Sub 
 	End If
 	
