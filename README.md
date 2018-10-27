@@ -11,3 +11,14 @@
 
 
 More details https://vers.by/en/blog/useful-articles/probe_wizard
+
+
+ Установка.
+-----------------------------------------------------------------------------
+1. Папку Probe Wizard RU из архива поместить внутрь папки
+⁄Mach3⁄Addons
+
+2. Все файлы из папки /macros из архива поместить внутрь папки макросов со своим профилем станка, по умолчанию это
+⁄Mach3⁄macros⁄Mach3Mill
+
+More details https://vers.by/ru/blog/useful-articles/probe_wizard
