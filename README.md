@@ -21,4 +21,4 @@ More details https://vers.by/en/blog/useful-articles/probe_wizard
 2. Все файлы из папки /macros из архива поместить внутрь папки макросов со своим профилем станка, по умолчанию это
 ⁄Mach3⁄macros⁄Mach3Mill
 
-More details https://vers.by/ru/blog/useful-articles/probe_wizard
+Подробнее https://vers.by/ru/blog/useful-articles/probe_wizard
