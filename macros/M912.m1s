@@ -87,7 +87,7 @@ CurrentFeed = GetOEMDRO(818) 'FeedRate()
 	'Save Z start position
 	Zpos = GetDRO(2)
 	'Safe Go to probe position
-	If Not SafeMoveX((XYclearance),CurrentFeed) Then
+	If Not SafeMoveXY((XYclearance),(-EdgeLength),CurrentFeed) Then
 		PushMSG("Manually return to the starting position and repeat the search")
 		Exit Sub 
 	End If
