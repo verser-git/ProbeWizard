@@ -6,6 +6,8 @@ Sub Main()
 
 Dim ToolSetterAbsXPos
 Dim ToolSetterAbsYPos
+Dim ToolChangeAbsXPos
+Dim ToolChangeAbsYPos
 Dim ZAbsSafePlane
 Dim ZAbsStartPos
 Dim ZMaxDist
@@ -33,6 +35,8 @@ Dim CurrentSpindle
 'Init vars
 ToolSetterAbsXPos = GetUserDRO(1835)
 ToolSetterAbsYPos = GetUserDRO(1836)
+ToolChangeAbsXPos = GetUserDRO(1833)
+ToolChangeAbsYPos = GetUserDRO(1834)
 ZAbsSafePlane = GetUserDRO(1837)
 ZAbsStartPos = GetUserDRO(1838)
 ZMaxDist = GetUserDRO(1839)
@@ -93,33 +97,52 @@ CurrentSpindle = GetOEMDRO(39)
 
 	'Save Z start position
 	Zpos = GetDRO(2)
+
+	Code "G91"
+	Code "F" & CurrentFeed
+	Sleep(125)
+
 	'Safe Go to start position under toolsetter
-	If Not SafeMoveZ(ZAbsSafePlane-GetOEMDRO(85),CurrentFeed) Then 
-		PushMSG("TS Height Probing is interrupted")
-		Exit Sub 
-	End If
-	If Not SafeMoveXY(ToolSetterAbsXPos-GetOEMDRO(83),ToolSetterAbsYPos-GetOEMDRO(84),CurrentFeed) Then 
-		PushMSG("TS Height Probing is interrupted")
-		Exit Sub 
-	End If
-	If Not SafeMoveZ(ZAbsStartPos-GetOEMDRO(85),CurrentFeed) Then 
-		PushMSG("TS Height Probing is interrupted")
-		Exit Sub 
-	End If
+	Code "G0 Z" & (ZAbsSafePlane-GetOEMDRO(85))
+	While IsMoving()
+		Sleep(100)
+	Wend
+
+	Code "G0 X" & (ToolSetterAbsXPos-GetOEMDRO(83)) & "Y" & (ToolSetterAbsYPos-GetOEMDRO(84))
+	While IsMoving()
+		Sleep(100)
+	Wend
+
+	Code "G0 Z" & (ZAbsStartPos-GetOEMDRO(85))
+	While IsMoving()
+		Sleep(100)
+	Wend
 	'Probe Z-
 	ZHit=ProbeZ(-1,ZMaxDist,Latch,FRate1,FRate2)
 	If ZHit=999999 Then 
+		Code "G90"
 		Exit Sub 
 	End If
 	'Indicate result
 	PushMSG("Z- = " & (ZHit))
     Call SetOEMDRO(1831,ZHit)
-	If Not SafeMoveZ(ZAbsStartPos-GetOEMDRO(85),CurrentFeed) Then 
-		PushMSG("TS Height Probing is interrupted")
-		Exit Sub 
-	End If
-	
-	
+	Code "G0 Z" & (ZAbsStartPos-GetOEMDRO(85))
+	While IsMoving()
+		Sleep(100)
+	Wend
+	'Safe Go to start position under toolsetter
+	Code "G0 Z" & (ZAbsSafePlane-GetOEMDRO(85))
+	While IsMoving()
+		Sleep(100)
+	Wend
+
+	Code "G0 X" & (ToolChangeAbsXPos-GetOEMDRO(83)) & "Y" & (ToolChangeAbsYPos-GetOEMDRO(84))
+	While IsMoving()
+		Sleep(100)
+	Wend
+
+	Code "G90"
+
 'epilog
 
 SetOEMDRO(59,XScale)
@@ -155,18 +178,6 @@ Function ProbeZ(Dir,DMax,Latch,FRate1,FRate2)
 	Wend
 	Res = GetVar(2002)
 '	PushMSG("Res=" & Res &", Zstart=" & Zstart & ", DMax=" & DMax & ", FRate1=" & FRate1)
-	If Abs(Res - Zstart - Dir*DMax) < 0.01 Then
-		PushMSG("Error: G31 Z search finished without making contact")
-		PushMSG("Manually return to the starting position and repeat the search")
-		Call SetLED49(AbsIncF)
-		Code "M05"
-		Sleep(125)
-		Code "S" & CurrentSpindle
-		Sleep(125)
-		SetOEMDRO(818,Ftmp)
-		Sleep(125)
-		Exit Function 
-	End If 
 	'Move back
 	Code "G00 Z" & -Dir*Latch
 	While IsMoving()
@@ -181,18 +192,6 @@ Function ProbeZ(Dir,DMax,Latch,FRate1,FRate2)
 	Wend
 	'Save result
 	Res = GetVar(2002)
-	If Abs(Res - Zstart - Dir*Latch*2) < 0.01 Then
-		PushMSG("Error: G31 Z latch finished without making contact")
-		PushMSG("Manually return to the starting position and repeat the search")
-		Call SetLED49(AbsIncF)
-		Code "M05"
-		Sleep(125)
-		Code "S" & CurrentSpindle
-		Sleep(125)
-		SetOEMDRO(818,Ftmp)
-		Sleep(125)
-		Exit Function 
-	End If 
 	Code "G00 Z" & -Dir*Latch
 	While IsMoving()
 	Wend
